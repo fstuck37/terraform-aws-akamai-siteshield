@@ -50,7 +50,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
   EOF
 }
 
-data "archive_file" "lambda_layer" {
+data "archive_file" "lambda_zip" {
   type        = "zip"
   source_dir  = "${path.module}/siteshield/siteshield.py"
   output_path = "siteshield.zip"
