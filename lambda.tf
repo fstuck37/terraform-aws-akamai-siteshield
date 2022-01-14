@@ -44,7 +44,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
 resource "aws_lambda_function" "lambda" {
   filename         = "${path.module}/siteshield.zip"
   source_code_hash = filebase64sha256("${path.module}/siteshield.zip")
-  function_name    = "static_webhook_lambda_function"
+  function_name    = local.lambda_name
   description      = "Akamai Site Shield Lambda function."
   role             = aws_iam_role.lambda_role.arn
   timeout      	   = "300"
