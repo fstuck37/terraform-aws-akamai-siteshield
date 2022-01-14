@@ -35,15 +35,6 @@ resource "aws_iam_role_policy" "lambda_policy" {
                 "ec2:DeleteNetworkInterface"
             ],
             "Resource": "*"
-        },{
-            "Effect": "Allow",
-            "Action": [
-                "s3:*"
-            ],
-            "Resource": [
-                "${aws_s3_bucket.website_bucket.arn}",
-                "${aws_s3_bucket.website_bucket.arn}/*"
-            ]
         }
     ]
 }
@@ -51,8 +42,8 @@ resource "aws_iam_role_policy" "lambda_policy" {
 }
 
 resource "aws_lambda_function" "lambda" {
-  filename         = "siteshield.zip"
-  source_code_hash = filebase64sha256("siteshield.zip")
+  filename         = "${path.module}/siteshield.zip"
+  source_code_hash = filebase64sha256("${path.module}/siteshield.zip")
   function_name    = "static_webhook_lambda_function"
   description      = "Akamai Site Shield Lambda function."
   role             = aws_iam_role.lambda_role.arn
