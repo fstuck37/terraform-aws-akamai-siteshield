@@ -17,3 +17,11 @@ output "aws_lb" {
   description = "The AWS Load Balancer webhook_alb"
   value       = aws_lb.webhook_alb
 }
+
+
+output "aws_lambda_function" {
+  description = "The AWS Lambda Function"
+  value       = aws_lambda_function.lambda
+}
+
+
