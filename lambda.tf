@@ -50,9 +50,15 @@ resource "aws_iam_role_policy" "lambda_policy" {
   EOF
 }
 
+data "archive_file" "lambda_layer" {
+  type        = "zip"
+  source_dir  = "${path.module}/siteshield/siteshield.py"
+  output_path = "siteshield.zip"
+}
+
 resource "aws_lambda_function" "lambda" {
-  filename         = "${path.module}/siteshield.zip"
-  source_code_hash = filebase64sha256("${path.module}/siteshield.zip")
+  filename         = data.archive_file.lambda_zip.output_path
+  source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
   function_name    = local.lambda_name
   description      = "Akamai Site Shield Lambda function."
   role             = aws_iam_role.lambda_role.arn
@@ -61,17 +67,14 @@ resource "aws_lambda_function" "lambda" {
   runtime          = "python3.8"
   tags             = var.tags 
 
-vpc_config {
+  vpc_config {
     subnet_ids          = var.subnets
     security_group_ids  = [aws_security_group.sg_lambda.id]
-    }
-
-
+  }
   environment {
     variables = {
       DEBUG = var.debug
       SECRET_ARN = var.akamai_secrets_arn
     }
   }
-
 }
