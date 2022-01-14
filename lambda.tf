@@ -57,7 +57,7 @@ resource "aws_lambda_function" "lambda" {
   description      = "Akamai Site Shield Lambda function."
   role             = aws_iam_role.lambda_role.arn
   timeout      	   = "300"
-  handler          = "lambda.handler"
+  handler          = "siteshield.handler"
   runtime          = "python3.8"
   tags             = var.tags 
 

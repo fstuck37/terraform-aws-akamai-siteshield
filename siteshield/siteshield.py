@@ -7,7 +7,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 debug = os.getenv("DEBUG")
 
-def edl_handler(event, context):
+def handler(event, context):
     print("EVENT", event)
     if event['httpMethod'] == "GET":
         path = event["path"][1:] 
