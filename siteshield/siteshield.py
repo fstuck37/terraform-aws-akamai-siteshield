@@ -17,7 +17,7 @@ def handler(event, context):
     if event['httpMethod'] == "GET":
         path = event["path"][1:] 
         logger.info(f"Context Path Received: {path}")
-        contents = boto3.client("secretsmanager").get_secret_value("akamai/siteshield")["SecretString"]
+        contents = boto3.client("secretsmanager").get_secret_value("akamai/siteshield")
        
         response = {
             "statusCode": 200,
@@ -29,7 +29,3 @@ def handler(event, context):
             }
         }
         return response
-
-
-
-
