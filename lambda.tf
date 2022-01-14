@@ -43,7 +43,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
             "secretsmanager:DescribeSecret",
             "secretsmanager:ListSecretVersionIds"
           ],
-          "Resource": ${var.akamai_secrets_arn}
+          "Resource": ${var.akamai_secrets_arn}*
         }
     ]
 }
