@@ -70,6 +70,7 @@ vpc_config {
   environment {
     variables = {
       DEBUG = var.debug
+      SECRET_ARN = var.akamai_secrets_arn
     }
   }
 
