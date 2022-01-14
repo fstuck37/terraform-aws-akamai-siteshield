@@ -54,7 +54,7 @@ variable "lb_name_prefix" {
 variable "lb_name_postfix" {
   description = "Optional : The prefix for the Load Balancer AWS Security Group. Default is _alb"
   type = string
-  default = "_alb"
+  default = "-alb"
 }
 
 variable "debug" {
