@@ -17,7 +17,7 @@ variable "subnets" {
 variable "siteshield_name" {
   description = "Optional : Used to build names of avrious components. Default is akamai_siteshield"
   type = string
-  default = "akamai_siteshield"
+  default = "akamai-siteshield"
 }
 
 variable "sg_name_postfix" {
@@ -29,13 +29,13 @@ variable "sg_name_postfix" {
 variable "lambda_sg_name_prefix" {
   description = "Optional : The prefix for the Lmabda AWS Security Group. Default is lambda_"
   type = string
-  default = "lambda_"
+  default = "lambda-"
 }
 
 variable "lb_sg_name_prefix" {
   description = "Optional : The prefix for the Load Balancer AWS Security Group. Default is alb_"
   type = string
-  default = "alb_"
+  default = "alb-"
 }
 
 variable "sg_src_cidr_blocks" {
