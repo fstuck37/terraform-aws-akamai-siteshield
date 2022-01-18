@@ -59,6 +59,7 @@ data "archive_file" "lambda_zip" {
 resource "aws_lambda_function" "lambda" {
   filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
+/*  layers           = [aws_lambda_layer_version.lambda_layer.arn]       **************************************** */
   function_name    = local.lambda_name
   description      = "Akamai Site Shield Lambda function."
   role             = aws_iam_role.lambda_role.arn
@@ -78,3 +79,20 @@ resource "aws_lambda_function" "lambda" {
     }
   }
 }
+
+// ----------------------------------------------------------------------------
+data "archive_file" "lambda_layer" {
+    type        = "zip"
+    source_dir  = "${path.module}/../src/layers/api"
+    output_path = "lambda_layer.zip"
+}
+
+resource "aws_lambda_layer_version" "lambda_layer" {
+  filename            = "lambda_layer.zip"
+  description         = "${var.name} lambda layer ${var.env}"
+  layer_name          = "${var.name}-lambda-layer-${var.env}"
+  source_code_hash    = "${data.archive_file.lambda_layer.output_base64sha256}"
+  compatible_runtimes = ["python3.8"]
+}
+
+
