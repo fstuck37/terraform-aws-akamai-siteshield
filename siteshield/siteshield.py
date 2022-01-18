@@ -36,7 +36,7 @@ def handler(event, context):
     except KeyError as e:
       logger.info("KeyError : Secret requires client_secret, access_token, client_token, and host")
     
-    contents = "this is only a test " + akamai(get_secret_json)
+    contents = akamai(get_secret_json)
     response = {
       "statusCode": 200,
       "statusDescription": "200 OK",
@@ -49,6 +49,7 @@ def handler(event, context):
     return response
 
 def akamai(get_secret_json):
+  all_ips = list()
   if debug: logger.info('siteshield.py : get_secret_json : start')
   baseurl = get_secret_json["host"]
   client_secret = get_secret_json["client_secret"]
@@ -60,8 +61,10 @@ def akamai(get_secret_json):
     client_secret=client_secret,
     access_token=access_token
   )
-  result = s.get(urljoin(baseurl, '/contract-api/v1/contracts/identifiers'))
-  return result
-
-
-
+  result = s.get(f"https://{baseurl}/siteshield/v1/maps").json()
+  for i in result['siteShieldMaps']:
+    all_ips.extend(i.get('currentCidrs',[]))
+    all_ips.extend(i.get('proposedCidrs',[]))
+  all_ips=list(set(all_ips))
+  output = str("\n".join(all_ips))
+  return output
