@@ -56,17 +56,31 @@ data "archive_file" "lambda_zip" {
   output_path = "siteshield.zip"
 }
 
+data "archive_file" "lambda_layer" {
+    type        = "zip"
+    source_dir  = "${path.module}/layer/"
+    output_path = "lambda_layer.zip"
+}
+
+resource "aws_lambda_layer_version" "lambda_layer" {
+  filename            = "lambda_layer.zip"
+  description         = "Akamai Lambda Layer"
+  layer_name          = "${local.lambda_name}-lambda-layer"
+  source_code_hash    = "${data.archive_file.lambda_layer.output_base64sha256}"
+  compatible_runtimes = ["python3.8"]
+}
+
 resource "aws_lambda_function" "lambda" {
   filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
-/*  layers           = [aws_lambda_layer_version.lambda_layer.arn]       **************************************** */
+  layers           = [aws_lambda_layer_version.lambda_layer.arn]
   function_name    = local.lambda_name
   description      = "Akamai Site Shield Lambda function."
   role             = aws_iam_role.lambda_role.arn
   timeout      	   = "300"
   handler          = "siteshield.handler"
   runtime          = "python3.8"
-  tags             = var.tags 
+  tags             = var.tags
 
   vpc_config {
     subnet_ids          = var.subnets

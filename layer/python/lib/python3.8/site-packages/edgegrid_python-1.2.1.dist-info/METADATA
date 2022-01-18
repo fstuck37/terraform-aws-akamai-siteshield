@@ -1,0 +1,24 @@
+Metadata-Version: 2.1
+Name: edgegrid-python
+Version: 1.2.1
+Summary: {OPEN} client authentication protocol for python-requests
+Home-page: https://github.com/akamai/AkamaiOPEN-edgegrid-python
+Author: Jonathan Landis
+Author-email: jlandis@akamai.com
+Maintainer: Akamai Developer Experience team
+Maintainer-email: dl-devexp-eng@akamai.com
+License: Apache 2.0
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=2.7.10
+License-File: LICENSE
+Requires-Dist: requests (>=2.3.0)
+Requires-Dist: pyOpenSSL (>=19.0.0)
+Requires-Dist: ndg-httpsclient
+Requires-Dist: pyasn1
+Requires-Dist: urllib3
+
+UNKNOWN
+
