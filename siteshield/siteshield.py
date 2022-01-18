@@ -50,4 +50,18 @@ def handler(event, context):
 
 def akamai(get_secret_json):
   if debug: logger.info('siteshield.py : get_secret_json : start')
-  return "TEST"
+  baseurl = get_secret_json["host"]
+  client_secret = get_secret_json["client_secret"]
+  access_token = get_secret_json["access_token"]
+  client_token = get_secret_json["client_token"]
+  s = requests.Session()
+  s.auth = EdgeGridAuth(
+    client_token=client_token,
+    client_secret=client_secret,
+    access_token=access_token
+  )
+  result = s.get(urljoin(baseurl, '/contract-api/v1/contracts/identifiers'))
+  return result
+
+
+
