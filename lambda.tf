@@ -66,13 +66,13 @@ resource "aws_lambda_layer_version" "lambda_layer" {
   filename            = "lambda_layer.zip"
   description         = "Akamai Lambda Layer"
   layer_name          = "${local.lambda_name}-lambda-layer"
-  source_code_hash    = "${data.archive_file.lambda_layer.output_base64sha256}"
+  source_code_hash    = "data.archive_file.lambda_layer.output_base64sha256
   compatible_runtimes = ["python3.8"]
 }
 
 resource "aws_lambda_function" "lambda" {
   filename         = data.archive_file.lambda_zip.output_path
-  source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   layers           = [aws_lambda_layer_version.lambda_layer.arn]
   function_name    = local.lambda_name
   description      = "Akamai Site Shield Lambda function."
