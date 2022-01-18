@@ -5,7 +5,7 @@ import urllib.request
 import base64
 from botocore.exceptions import ClientError
 import json
-from botocore.vendored import requests
+import requests
 from urllib.parse import urljoin
 from akamai.edgegrid import EdgeGridAuth, EdgeRc
 
