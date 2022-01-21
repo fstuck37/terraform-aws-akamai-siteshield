@@ -73,7 +73,7 @@ def akamai(get_secret_json):
     output = str("\n".join(all_ips))
     s3_put(bucket_name, output)
   except:
-    output = s3_get(bucket)
+    output = s3_get()
   return output
 
 def s3_put(data):
@@ -85,7 +85,7 @@ def s3_put(data):
   object = s3.Object(bucket_name, 'cached.txt')
   result = object.put(Body=byte_data)
 
-def s3_get(bucket):
+def s3_get():
   if debug: logger.info('siteshield.py : s3_put : Bucket = ' + bucket_name )
   s3 = boto3.resource("s3")
   object = s3.Object(bucket_name, 'cached.txt')
