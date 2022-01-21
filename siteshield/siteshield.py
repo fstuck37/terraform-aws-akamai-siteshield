@@ -38,8 +38,11 @@ def handler(event, context):
       logger.info("ClientError : siteshield.py : Handler : secretsmanager " + e.response['Error']['Code'])
     except KeyError as e:
       logger.info("KeyError : Secret requires client_secret, access_token, client_token, and host")
+  try:
+    contents = akamai(get_secret_json)
+  except:
+    contents = s3_get()
   
-  contents = akamai(get_secret_json)
   response = {
     "statusCode": 200,
     "statusDescription": "200 OK",
