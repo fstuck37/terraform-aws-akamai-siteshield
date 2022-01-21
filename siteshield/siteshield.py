@@ -14,6 +14,8 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 debug = bool(os.getenv("DEBUG"))
 secret_arn = os.getenv("SECRET_ARN")
+bucket_name = os.getenv("BUCKET")
+
 secret_name = secret_arn.split(":")[-1]
 
 def handler(event, context):
@@ -56,7 +58,6 @@ def akamai(get_secret_json):
   client_secret = get_secret_json["client_secret"]
   access_token = get_secret_json["access_token"]
   client_token = get_secret_json["client_token"]
-  bucket_name = get_secret_json["BUCKET"]
   try:
     s = requests.Session()
     s.auth = EdgeGridAuth(
@@ -75,18 +76,18 @@ def akamai(get_secret_json):
     output = s3_get(bucket)
   return output
 
-def s3_put(bucket_name, data):
+def s3_put(data):
   if debug: logger.info('siteshield.py : s3_put : Bucket = ' + bucket_name )
   if debug: logger.info('siteshield.py : s3_put : Data = ' + data )
   d = datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
   byte_data = bytes("Cached " + d +  "\n" + data , 'utf-8')
   s3 = boto3.resource("s3")
-  object = s3.Object('<bucket_name>', 'cached.txt')
+  object = s3.Object(bucket_name, 'cached.txt')
   result = object.put(Body=byte_data)
 
 def s3_get(bucket):
   if debug: logger.info('siteshield.py : s3_put : Bucket = ' + bucket_name )
   s3 = boto3.resource("s3")
-  object = s3.Object('<bucket_name>', 'cached.txt')
+  object = s3.Object(bucket_name, 'cached.txt')
   result = object.get().decode("utf-8") 
   return result
