@@ -48,7 +48,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
         {
           "Effect": "Allow",
           "Action": ["s3:ListBucket"],
-          "Resource": [aws_s3_bucket.bucket.arn]
+          "Resource": [${aws_s3_bucket.bucket.arn}]
         },
         {
           "Effect": "Allow",
