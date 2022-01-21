@@ -46,15 +46,13 @@ resource "aws_iam_role_policy" "lambda_policy" {
           "Resource": "${var.akamai_secrets_arn}*"
         },
         {
-          "Sid": "ListObjectsInBucket",
           "Effect": "Allow",
           "Action": ["s3:ListBucket"],
           "Resource": [aws_s3_bucket.bucket.arn]
         },
         {
-          "Sid": "AllObjectActions",
           "Effect": "Allow",
-          "Action": "s3:*Object",
+          "Action": ["s3:*Object"],
           "Resource": ["${aws_s3_bucket.bucket.arn}/*"]
         }
     ]
