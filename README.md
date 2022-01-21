@@ -23,6 +23,8 @@ Argument Reference
 ------------
    * **vpc_id** - Required : The VPC ID to deploy this to.
    * **subnets** - Required : The list of subnet IDs To Deploy to.
+   * **akamai_secrets_arn** - Required : The ARN to the Secrets manager entry for Akamia information.
+
    * **tags** - Optional : A map of tags to assign to the resource.
    * **siteshield_name** - Optional : Used to build names of avrious components. Default is akamai_siteshield
    * **sg_name_postfix** - Optional : The postfix name of the AWS Security Group. Default is -sg
@@ -31,8 +33,8 @@ Argument Reference
    * **sg_src_cidr_blocks** - Optional : List of the networks to allow to the Load Balancer. Defaults to RFC1918
    * **lb_name_prefix** - Optional : The prefix for the Load Balancer AWS Security Group. Default is blank
    * **lb_name_postfix** - Optional : The prefix for the Load Balancer AWS Security Group. Default is _alb
+   * **force_cache** - Optional : Force the Lambda to load from cahce. Defaults to False
    * **debug** - Optional : Debug the Lambda function. Defaults is false.
-   * **akamai_secrets_arn** - Required : The ARN to the Secrets manager entry for Akamia information.
 
 Output Reference
 ------------
