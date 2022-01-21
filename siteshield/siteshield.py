@@ -37,21 +37,17 @@ def handler(event, context):
     except KeyError as e:
       logger.info("KeyError : Secret requires client_secret, access_token, client_token, and host")
     
-    try:
-      contents = akamai(get_secret_json)
-    except:
-      contents = "Load Caches Results"
-    
-    response = {
-      "statusCode": 200,
-      "statusDescription": "200 OK",
-      "isBase64Encoded": False,
-      "body" : contents,
-      "headers": {
-        "Content-Type": "text; charset=utf-8"
-      }
+  contents = akamai(get_secret_json)
+  response = {
+    "statusCode": 200,
+    "statusDescription": "200 OK",
+    "isBase64Encoded": False,
+    "body" : contents,
+    "headers": {
+    "Content-Type": "text; charset=utf-8"
     }
-    return response
+  }
+  return response
 
 def akamai(get_secret_json):
   all_ips = list()
