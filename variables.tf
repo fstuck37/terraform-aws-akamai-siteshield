@@ -63,7 +63,6 @@ variable "debug" {
   default = false
 }
 
-
 variable "akamai_secrets_arn" {
   description = "Required : The ARN to the Secrets manager entry for Akamia information."
   type = string

@@ -18,10 +18,12 @@ output "aws_lb" {
   value       = aws_lb.webhook_alb
 }
 
-
 output "aws_lambda_function" {
   description = "The AWS Lambda Function"
   value       = aws_lambda_function.lambda
 }
 
-
+output "s3_bucket" {
+  description = "The AWS S3 Bucket used for cache."
+  value       = aws_s3_bucket.bucket.arn
+}
