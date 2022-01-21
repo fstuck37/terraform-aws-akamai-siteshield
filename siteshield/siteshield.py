@@ -70,7 +70,7 @@ def akamai(get_secret_json):
     all_ips.extend(i.get('proposedCidrs',[]))
   all_ips=list(set(all_ips))
   output = str("\n".join(all_ips))
-  s3_put(bucket_name, output)
+  s3_put(output)
   return output
 
 def s3_put(data):
