@@ -15,6 +15,7 @@ logger.setLevel(logging.INFO)
 debug = bool(os.getenv("DEBUG"))
 secret_arn = os.getenv("SECRET_ARN")
 bucket_name = os.getenv("BUCKET")
+force_cache = bool(os.getenv("FORCE_CACHE"))
 
 secret_name = secret_arn.split(":")[-1]
 
@@ -26,7 +27,10 @@ def handler(event, context):
     if debug: logger.info(f"siteshield.py : Handler : Context Path Received: {path}")
     if debug: logger.info(f"siteshield.py : Handler : secret_arn {secret_arn}")
     if debug: logger.info(f"siteshield.py : Handler : secret_name {secret_name}")
-    
+  
+  if force_cache :
+    contents = s3_get()
+  else :
     try:
       get_secret_value_response = boto3.client("secretsmanager").get_secret_value(SecretId=secret_name)
       get_secret_json = json.loads(get_secret_value_response["SecretString"])
@@ -38,10 +42,10 @@ def handler(event, context):
       logger.info("ClientError : siteshield.py : Handler : secretsmanager " + e.response['Error']['Code'])
     except KeyError as e:
       logger.info("KeyError : Secret requires client_secret, access_token, client_token, and host")
-  try:
-    contents = akamai(get_secret_json)
-  except:
-    contents = s3_get()
+    try:
+      contents = akamai(get_secret_json)
+    except:
+      contents = s3_get()
   
   response = {
     "statusCode": 200,

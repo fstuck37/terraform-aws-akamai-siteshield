@@ -67,3 +67,9 @@ variable "akamai_secrets_arn" {
   description = "Required : The ARN to the Secrets manager entry for Akamia information."
   type = string
 }
+
+variable "force_cache" {
+  description = "Optional : Force the Lambda to load from cahce. Defaults to False"
+  type = bool
+  default = false
+}

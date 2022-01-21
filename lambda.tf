@@ -100,9 +100,10 @@ resource "aws_lambda_function" "lambda" {
   }
   environment {
     variables = {
-      DEBUG      = var.debug
-      SECRET_ARN = var.akamai_secrets_arn
-      BUCKET     = aws_s3_bucket.bucket.arn
+      DEBUG       = var.debug
+      SECRET_ARN  = var.akamai_secrets_arn
+      BUCKET      = aws_s3_bucket.bucket.arn
+      FORCE_CACHE = var.force_cache
     }
   }
 }
