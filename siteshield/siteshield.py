@@ -8,6 +8,7 @@ import json
 import requests
 from urllib.parse import urljoin
 from akamai.edgegrid import EdgeGridAuth, EdgeRc
+import datetime
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -36,7 +37,11 @@ def handler(event, context):
     except KeyError as e:
       logger.info("KeyError : Secret requires client_secret, access_token, client_token, and host")
     
-    contents = akamai(get_secret_json)
+    try:
+      contents = akamai(get_secret_json)
+    except:
+      contents = "Load Caches Results"
+    
     response = {
       "statusCode": 200,
       "statusDescription": "200 OK",
@@ -55,16 +60,37 @@ def akamai(get_secret_json):
   client_secret = get_secret_json["client_secret"]
   access_token = get_secret_json["access_token"]
   client_token = get_secret_json["client_token"]
-  s = requests.Session()
-  s.auth = EdgeGridAuth(
-    client_token=client_token,
-    client_secret=client_secret,
-    access_token=access_token
-  )
-  result = s.get(f"https://{baseurl}/siteshield/v1/maps").json()
-  for i in result['siteShieldMaps']:
-    all_ips.extend(i.get('currentCidrs',[]))
-    all_ips.extend(i.get('proposedCidrs',[]))
-  all_ips=list(set(all_ips))
-  output = str("\n".join(all_ips))
+  bucket_name = get_secret_json["BUCKET"]
+  try:
+    s = requests.Session()
+    s.auth = EdgeGridAuth(
+      client_token=client_token,
+      client_secret=client_secret,
+      access_token=access_token
+    )
+    result = s.get(f"https://{baseurl}/siteshield/v1/maps").json()
+    for i in result['siteShieldMaps']:
+      all_ips.extend(i.get('currentCidrs',[]))
+      all_ips.extend(i.get('proposedCidrs',[]))
+    all_ips=list(set(all_ips))
+    output = str("\n".join(all_ips))
+    s3_put(bucket_name, output)
+  except:
+    output = s3_get(bucket)
   return output
+
+def s3_put(bucket_name, data):
+  if debug: logger.info('siteshield.py : s3_put : Bucket = ' + bucket_name )
+  if debug: logger.info('siteshield.py : s3_put : Data = ' + data )
+  d = datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
+  byte_data = bytes("Cached " + d +  "\n" + data , 'utf-8')
+  s3 = boto3.resource("s3")
+  object = s3.Object('<bucket_name>', 'cached.txt')
+  result = object.put(Body=byte_data)
+
+def s3_get(bucket):
+  if debug: logger.info('siteshield.py : s3_put : Bucket = ' + bucket_name )
+  s3 = boto3.resource("s3")
+  object = s3.Object('<bucket_name>', 'cached.txt')
+  result = object.get().decode("utf-8") 
+  return result
