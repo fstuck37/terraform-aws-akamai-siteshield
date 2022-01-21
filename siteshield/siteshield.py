@@ -58,22 +58,19 @@ def akamai(get_secret_json):
   client_secret = get_secret_json["client_secret"]
   access_token = get_secret_json["access_token"]
   client_token = get_secret_json["client_token"]
-  try:
-    s = requests.Session()
-    s.auth = EdgeGridAuth(
-      client_token=client_token,
-      client_secret=client_secret,
-      access_token=access_token
-    )
-    result = s.get(f"https://{baseurl}/siteshield/v1/maps").json()
-    for i in result['siteShieldMaps']:
-      all_ips.extend(i.get('currentCidrs',[]))
-      all_ips.extend(i.get('proposedCidrs',[]))
-    all_ips=list(set(all_ips))
-    output = str("\n".join(all_ips))
-    s3_put(bucket_name, output)
-  except:
-    output = s3_get()
+  s = requests.Session()
+  s.auth = EdgeGridAuth(
+    client_token=client_token,
+    client_secret=client_secret,
+    access_token=access_token
+  )
+  result = s.get(f"https://{baseurl}/siteshield/v1/maps").json()
+  for i in result['siteShieldMaps']:
+    all_ips.extend(i.get('currentCidrs',[]))
+    all_ips.extend(i.get('proposedCidrs',[]))
+  all_ips=list(set(all_ips))
+  output = str("\n".join(all_ips))
+  s3_put(bucket_name, output)
   return output
 
 def s3_put(data):
