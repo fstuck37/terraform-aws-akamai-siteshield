@@ -26,7 +26,7 @@ Argument Reference
    * **vpc_id** - Required : The VPC ID to deploy this to.
    * **subnets** - Required : The list of subnet IDs To Deploy to.
    * **akamai_secrets_arn** - Required : The ARN to the Secrets manager entry for Akamai security information.
-     Secrets Manager must contain and entry with the following settings:
+     The Secrets Manager entry must contain the following settings:
      - host
      - client_secret
      - access_token
