@@ -12,15 +12,14 @@ import datetime
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-debug = bool(os.getenv("DEBUG"))
+debug = str(os.getenv("DEBUG")) == "True"
 secret_arn = os.getenv("SECRET_ARN")
 bucket_name = os.getenv("BUCKET")
-force_cache = bool(os.getenv("FORCE_CACHE"))
-
+force_cache = str(os.getenv("FORCE_CACHE")) == "True"
 secret_name = secret_arn.split(":")[-1]
 
 def handler(event, context):
-  if debug: logger.info('siteshield.py : Handler : start')
+  if debug: logger.info('siteshield.py : Handler : start with debugging')
   if event['httpMethod'] == "GET":
     if debug: logger.info('siteshield.py : Handler : GET ')
     path = event["path"][1:] 
@@ -30,6 +29,7 @@ def handler(event, context):
     if debug: logger.info(f"siteshield.py : Handler : force_cache {force_cache}")
     
     if force_cache :
+      if debug: logger.info(f"siteshield.py : Handler : force_cache {force_cache}")
       contents = s3_get()
     else :
       try:
