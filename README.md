@@ -4,6 +4,9 @@ This module deploys an ALB, Lambda, etc. to connect to Akamai Site shield API an
 The module also creates an S3 Bucket that will be used to cache the data from the last successful load from Akamai.
 If there is ever an error connecting to Akamai it will return the file form the cache.
 
+This module can be used to feed the [AWS Dynamic Prefix List](https://github.com/fstuck37/terraform-aws-extdyn-prefixlist) module allowing a current list of Akamia IPs in a Security Group.
+
+
 Example
 ------------
 ```
