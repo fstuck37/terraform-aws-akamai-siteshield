@@ -22,6 +22,19 @@ output "siteshield" {
   value = module.siteshield.lb_dns_name
 }
 
+module "awsdynprefix" {
+  source       = "git::https://github.com/fstuck37/terraform-aws-extdyn-prefixlist.git"
+  variables =   {
+    prefix = "siteshield=${module.siteshield.lb_dns_name}"
+  }
+
+  vpc_config = [
+    {
+      subnet_ids         = ["subnet-1234567890abcdef12","subnet-123456789012abcdef","subnet-abcdef123456789012"]
+      security_group_ids = [sg-123456789abcdefab]
+    }
+  ]
+}
 ```
 
 Argument Reference
