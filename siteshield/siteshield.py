@@ -92,10 +92,13 @@ def s3_put(data):
   s3 = boto3.resource("s3")
   object = s3.Object(bucket_name.split(":")[-1], 'cached.txt')
   result = object.put(Body=byte_data)
+  if debug: logger.info('siteshield.py : s3_put : result = ' + str(result) )
+
 
 def s3_get():
   if debug: logger.info('siteshield.py : s3_get : Bucket = ' + bucket_name )
   s3 = boto3.resource("s3")
   object = s3.Object(bucket_name.split(":")[-1], 'cached.txt')
   result = object.get()['Body'].read().decode('utf-8')
+  if debug: logger.info('siteshield.py : s3_get : result = ' + str(result) )
   return result
