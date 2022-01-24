@@ -19,7 +19,7 @@ force_cache = str(os.getenv("FORCE_CACHE")) == "True"
 secret_name = secret_arn.split(":")[-1]
 
 def handler(event, context):
-  if debug: logger.info('siteshield.py : Handler : start with debugging')
+  if debug: logger.info("siteshield.py : Handler : start with debugging")
   if event['httpMethod'] == "GET":
     if debug: logger.info('siteshield.py : Handler : GET ')
     path = event["path"][1:] 
@@ -40,9 +40,9 @@ def handler(event, context):
         access_token = get_secret_json["access_token"]
         client_token = get_secret_json["client_token"]
       except ClientError as e:
-        logger.info("ClientError : siteshield.py : Handler : secretsmanager " + e.response['Error']['Code'])
+        logger.info("ClientError : siteshield.py : Handler : secretsmanager : Client Error " + e.response['Error']['Code'])
       except KeyError as e:
-        logger.info("KeyError : Secret requires client_secret, access_token, client_token, and host")
+        logger.info("ClientError : siteshield.py : Handler : secretsmanager : KeyError : Secret requires client_secret, access_token, client_token, and host")
       try:
         contents = akamai(get_secret_json)
       except:
@@ -59,12 +59,12 @@ def handler(event, context):
     }
     return response
   else :
-    logger.info(f"siteshield.py : Handler : Error Not HTTP GET Method")
-    return "Error"
+    logger.info("siteshield.py : Handler : Error Not HTTP GET Method")
+    return "Error Not HTTP GET Method"
 
 def akamai(get_secret_json):
+  if debug: logger.info("siteshield.py : akamai : start")
   all_ips = list()
-  if debug: logger.info('siteshield.py : get_secret_json : start')
   baseurl = get_secret_json["host"]
   client_secret = get_secret_json["client_secret"]
   access_token = get_secret_json["access_token"]
@@ -82,23 +82,24 @@ def akamai(get_secret_json):
   all_ips=list(set(all_ips))
   output = str("\n".join(all_ips))
   s3_put(output)
+  if debug: logger.info(f"siteshield.py : akamai : output : {output}")
   return output
 
 def s3_put(data):
-  if debug: logger.info('siteshield.py : s3_put : Bucket = ' + bucket_name )
-  if debug: logger.info('siteshield.py : s3_put : Data = ' + data )
+  if debug: logger.info("siteshield.py : s3_put : Bucket : Start")
+  if debug: logger.info(f"siteshield.py : s3_put : Bucket = {bucket_name}")
+  if debug: logger.info(f"siteshield.py : s3_put : Data = {data}" )
   d = datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
   byte_data = bytes("Cached " + d +  "\n" + data , 'utf-8')
   s3 = boto3.resource("s3")
   object = s3.Object(bucket_name.split(":")[-1], 'cached.txt')
   result = object.put(Body=byte_data)
-  if debug: logger.info('siteshield.py : s3_put : result = ' + str(result) )
-
+  if debug: logger.info(f"siteshield.py : s3_put : result = {result}")
 
 def s3_get():
-  if debug: logger.info('siteshield.py : s3_get : Bucket = ' + bucket_name )
+  if debug: logger.info(f"siteshield.py : s3_get : Bucket = {bucket_name}" )
   s3 = boto3.resource("s3")
   object = s3.Object(bucket_name.split(":")[-1], 'cached.txt')
   result = object.get()['Body'].read().decode('utf-8')
-  if debug: logger.info('siteshield.py : s3_get : result = ' + str(result) )
+  if debug: logger.info(f"siteshield.py : s3_get : result = {result}" )
   return result
