@@ -16,7 +16,6 @@ debug = str(os.getenv("DEBUG")) == "True"
 secret_arn = os.getenv("SECRET_ARN")
 bucket_name = os.getenv("BUCKET")
 force_cache = str(os.getenv("FORCE_CACHE")) == "True"
-secret_name = secret_arn.split(":")[-1]
 
 def handler(event, context):
   if debug: logger.info("siteshield.py : Handler : start with debugging")
@@ -33,7 +32,7 @@ def handler(event, context):
       contents = s3_get()
     else :
       try:
-        get_secret_value_response = boto3.client("secretsmanager").get_secret_value(SecretId=secret_name)
+        get_secret_value_response = boto3.client("secretsmanager").get_secret_value(SecretId=secret_arn)
         get_secret_json = json.loads(get_secret_value_response["SecretString"])
         client_secret = get_secret_json["client_secret"]
         host = get_secret_json["host"]
